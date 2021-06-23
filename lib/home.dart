@@ -31,7 +31,8 @@ class _ArticlesState extends State<Articles> {
               return GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, DetailScreen.routeName,
-                      arguments: DetailArguments(article.id, article.title));
+                      arguments: DetailArguments(
+                          article.id, article.date, article.title));
                 },
                 child: articleOverview(article),
               );
@@ -107,14 +108,14 @@ class _DetailScreen extends State<DetailScreen> {
     futureArticle = fetchArticleById(args.id);
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.title),
+        title: Text(args.date),
       ),
       body: Center(
         child: FutureBuilder<Article>(
             future: futureArticle,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!.title);
+                return Text(snapshot.data!.date);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -137,7 +138,8 @@ class _DetailScreen extends State<DetailScreen> {
 
 class DetailArguments {
   final int id;
+  final String date;
   final String title;
 
-  DetailArguments(this.id, this.title);
+  DetailArguments(this.id, this.date, this.title);
 }

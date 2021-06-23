@@ -25,24 +25,13 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => Material(
-              child: Container(
-                color: Colors.white,
-                // decoration: BoxDecoration(color: Colors.white),
-                child: SafeArea(
-                  child: Articles(),
-                ),
+        '/': (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('Home'),
               ),
+              body: Articles(),
             ),
-        DetailScreen.routeName: (context) => Material(
-              child: Container(
-                color: Colors.white,
-                // decoration: BoxDecoration(color: Colors.white),
-                child: SafeArea(
-                  child: DetailScreen(),
-                ),
-              ),
-            ),
+        DetailScreen.routeName: (context) => DetailScreen(),
       },
     );
   }
