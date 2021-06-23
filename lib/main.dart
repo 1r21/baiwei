@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:baiwei/home.dart';
+import 'detail.dart';
 
 void main() {
   runApp(MyApp());
