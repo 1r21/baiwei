@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String baseURI = dotenv.env['API_URL']! + '/api';
 
 class Api {
   final int code;
@@ -43,8 +46,7 @@ class Article {
 }
 
 Future<List> fetchArticle() async {
-  final response =
-      await http.get(Uri.parse('https://api.chenggang.win/api/news'));
+  final response = await http.get(Uri.parse('$baseURI/news'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -59,7 +61,7 @@ Future<List> fetchArticle() async {
 }
 
 Future<Article> fetchArticleById(int id) async {
-  var uri = Uri.parse('https://api.chenggang.win/api/news/detail');
+  var uri = Uri.parse('$baseURI/news/detail');
   try {
     final response =
         await http.post(uri, body: jsonEncode({"id": id.toString()}));
