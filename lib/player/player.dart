@@ -3,7 +3,7 @@ import 'package:audio_session/audio_session.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:baiwei/player/common.dart';
+import 'package:baiwei/player/seekbar.dart';
 import 'package:baiwei/util/request.dart';
 
 class MyPlayer extends StatefulWidget {
@@ -61,8 +61,6 @@ class _MyPlayerState extends State<MyPlayer> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Display play/pause button and volume/speed sliders.
-        ControlButtons(_player),
         // Display seek bar. Using StreamBuilder, this widget rebuilds
         // each time the position, buffered position or duration changes.
         StreamBuilder<PositionData>(
@@ -77,6 +75,11 @@ class _MyPlayerState extends State<MyPlayer> {
             );
           },
         ),
+        // Display play/pause button and volume/speed sliders.
+        Container(
+          margin: EdgeInsets.only(top: 30),
+          child: ControlButtons(_player),
+        )
       ],
     );
   }
@@ -106,29 +109,31 @@ class ControlButtons extends StatelessWidget {
                 processingState == ProcessingState.buffering) {
               return Container(
                 margin: EdgeInsets.all(8.0),
-                width: 64.0,
-                height: 64.0,
+                width: 56.0,
+                height: 56.0,
                 child: CircularProgressIndicator(),
               );
             } else if (playing != true) {
               return IconButton(
                 icon: Icon(Icons.play_arrow),
-                iconSize: 64.0,
+                color: Colors.white,
+                iconSize: 56.0,
                 onPressed: player.play,
               );
             } else if (processingState != ProcessingState.completed) {
               return IconButton(
                 icon: Icon(Icons.pause),
-                iconSize: 64.0,
+                color: Colors.white,
+                iconSize: 56.0,
                 onPressed: player.pause,
               );
-            } else {
-              return IconButton(
-                icon: Icon(Icons.replay),
-                iconSize: 64.0,
-                onPressed: () => player.seek(Duration.zero),
-              );
             }
+            return IconButton(
+              icon: Icon(Icons.replay),
+              color: Colors.white,
+              iconSize: 56.0,
+              onPressed: () => player.seek(Duration.zero),
+            );
           },
         ),
       ],

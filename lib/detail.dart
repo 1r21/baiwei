@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'player/player.dart';
@@ -100,7 +102,7 @@ Widget actionBtn(Article data, context) {
           image: NetworkImage(data.cover),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(2)),
+        borderRadius: BorderRadius.all(Radius.circular(4)),
       ),
       child: Row(
         children: [
@@ -113,17 +115,14 @@ Widget actionBtn(Article data, context) {
             onTap: () async {
               Navigator.push(context, MaterialPageRoute<void>(
                 builder: (BuildContext context) {
-                  return Scaffold(
-                    appBar: AppBar(title: Text(data.date)),
-                    body: MyPlayer(data),
-                  );
+                  return playView(data);
                 },
               ));
             },
           ),
           GestureDetector(
             child: Icon(
-              Icons.home_filled,
+              Icons.home_outlined,
               color: Colors.orange,
               size: 30.0,
             ),
@@ -133,6 +132,62 @@ Widget actionBtn(Article data, context) {
           )
         ],
       ),
+    ),
+  );
+}
+
+Widget playView(data) {
+  return Scaffold(
+    appBar: AppBar(title: Text(data.date)),
+    body: Stack(
+      children: [
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(data.cover),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          child: Container(
+            padding: EdgeInsetsDirectional.all(20),
+            child: Column(
+              children: [
+                Container(
+                    width: 200,
+                    height: 200,
+                    margin: EdgeInsets.only(top: 60),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(data.cover),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(top: 50, bottom: 20),
+                  child: Text(
+                    data.title,
+                    style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 40),
+                  child: Text(
+                    data.date,
+                    style: TextStyle(fontSize: 16, color: Color(0xFFFFFFFF)),
+                  ),
+                ),
+                MyPlayer(data)
+              ],
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }
