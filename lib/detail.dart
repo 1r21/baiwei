@@ -1,5 +1,8 @@
-import 'package:baiwei/util/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'player/player.dart';
+
+import 'util/index.dart';
 import 'util/request.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -31,26 +34,17 @@ class _DetailScreen extends State<DetailScreen> {
             future: futureArticle,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var formatTexts = parseText(snapshot.data!.transcript).toList();
-                return ListView.builder(
-                  padding: const EdgeInsets.all(10),
-                  itemCount: formatTexts.length,
-                  itemBuilder: (_, int index) {
-                    var text = formatTexts[index];
-                    if (text['type'] == 'title') {
-                      return Text(text['value'] as String,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold));
-                    }
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: Text(text['value'] as String,
-                          style: const TextStyle(fontSize: 18)),
-                    );
-                  },
+                var data = snapshot.data!;
+                var formatTexts = parseText(data.transcript).toList();
+                return Stack(
+                  children: [
+                    textList(formatTexts),
+                    actionBtn(data, context),
+                  ],
                 );
-                // return Text(snapshot.data!.date);
-              } else if (snapshot.hasError) {
+              }
+
+              if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
 
@@ -76,4 +70,69 @@ class DetailArguments {
   final String title;
 
   DetailArguments(this.id, this.date, this.title);
+}
+
+Widget textList(formatTexts) {
+  return ListView.builder(
+    padding: const EdgeInsets.all(10),
+    itemCount: formatTexts.length,
+    itemBuilder: (_, int index) {
+      var text = formatTexts[index];
+      if (text['type'] == 'title') {
+        return Text(text['value'] as String,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+      }
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 6.0),
+        child: Text(text['value'], style: const TextStyle(fontSize: 18)),
+      );
+    },
+  );
+}
+
+Widget actionBtn(Article data, context) {
+  return Positioned(
+    bottom: 35,
+    right: 35,
+    child: Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: NetworkImage(data.cover),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
+      child: Row(
+        children: [
+          GestureDetector(
+            child: Icon(
+              Icons.play_circle_outlined,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            onTap: () async {
+              Navigator.push(context, MaterialPageRoute<void>(
+                builder: (BuildContext context) {
+                  return Scaffold(
+                    appBar: AppBar(title: Text(data.date)),
+                    body: MyPlayer(data),
+                  );
+                },
+              ));
+            },
+          ),
+          GestureDetector(
+            child: Icon(
+              Icons.home_filled,
+              color: Colors.orange,
+              size: 30.0,
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/');
+            },
+          )
+        ],
+      ),
+    ),
+  );
 }
