@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -137,12 +138,14 @@ Widget actionBtn(Article data, context) {
 }
 
 Widget playView(data) {
+  double offset = Platform.isAndroid ? 30 : 60;
+  double pOffset = Platform.isAndroid ? 20 : 50;
   return Scaffold(
     appBar: AppBar(title: Text(data.date)),
     body: Stack(
       children: [
         ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -154,13 +157,13 @@ Widget playView(data) {
         ),
         Positioned(
           child: Container(
-            padding: EdgeInsetsDirectional.all(20),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: Column(
               children: [
                 Container(
                     width: 200,
                     height: 200,
-                    margin: EdgeInsets.only(top: 60),
+                    margin: EdgeInsets.only(top: offset, bottom: offset),
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(data.cover),
@@ -168,20 +171,16 @@ Widget playView(data) {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     )),
-                Padding(
-                  padding: EdgeInsets.only(top: 50, bottom: 20),
-                  child: Text(
-                    data.title,
-                    style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
-                  ),
+                Text(
+                  data.title,
+                  style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 40),
-                  child: Text(
-                    data.date,
-                    style: TextStyle(fontSize: 16, color: Color(0xFFFFFFFF)),
-                  ),
-                ),
+                    padding: EdgeInsets.only(top: 10, bottom: pOffset),
+                    child: Text(
+                      data.date,
+                      style: TextStyle(fontSize: 16, color: Color(0xFFFFFFFF)),
+                    )),
                 MyPlayer(data)
               ],
             ),

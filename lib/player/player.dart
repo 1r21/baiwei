@@ -76,10 +76,7 @@ class _MyPlayerState extends State<MyPlayer> {
           },
         ),
         // Display play/pause button and volume/speed sliders.
-        Container(
-          margin: EdgeInsets.only(top: 30),
-          child: ControlButtons(_player),
-        )
+        ControlButtons(_player)
       ],
     );
   }
