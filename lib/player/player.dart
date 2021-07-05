@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 import 'seekbar.dart';
 import '../util/request.dart';
+import '../player/playerTask.dart';
 
 class MyPlayer extends StatefulWidget {
   MyPlayer(this.article);
@@ -38,11 +39,11 @@ class _MyPlayerState extends State<MyPlayer> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Display seek bar. Using StreamBuilder, this widget rebuilds
-        // each time the position, buffered position or duration changes.
+        /// Display seek bar. Using StreamBuilder, this widget rebuilds
+        /// each time the position, buffered position or duration changes.
         StreamBuilder<MediaState>(
           stream: _mediaStateStream,
           builder: (context, snapshot) {
@@ -58,13 +59,16 @@ class _MyPlayerState extends State<MyPlayer> {
           },
         ),
         // Display play/pause button and volume/speed sliders.
-        ControlButtons()
+        ControlButtons(article)
       ],
     );
   }
 }
 
 class ControlButtons extends StatelessWidget {
+  final Article article;
+  ControlButtons(this.article);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<PlaybackState>(
@@ -87,7 +91,19 @@ class ControlButtons extends StatelessWidget {
             icon: Icon(Icons.play_arrow),
             color: Colors.white,
             iconSize: 56.0,
-            onPressed: AudioService.play,
+            onPressed: () {
+              if (AudioService.running) {
+                AudioService.play();
+              } else {
+                // AudioService.stop();
+                AudioService.start(params: {
+                  "id": article.src,
+                  "cover": article.cover,
+                  "title": article.title,
+                  "date": article.date,
+                }, backgroundTaskEntrypoint: _audioPlayerTaskEntrypoint);
+              }
+            },
           );
         }
 
@@ -100,4 +116,9 @@ class ControlButtons extends StatelessWidget {
       },
     );
   }
+}
+
+/// NOTE: Your entrypoint MUST be a top-level function.
+void _audioPlayerTaskEntrypoint() async {
+  AudioServiceBackground.run(() => AudioPlayerTask());
 }

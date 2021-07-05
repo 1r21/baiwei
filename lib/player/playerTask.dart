@@ -66,7 +66,7 @@ class AudioPlayerTask extends BackgroundAudioTask {
     try {
       _loadDuration(AudioServiceBackground.mediaItem!);
       // _loadBufferedPosition(AudioServiceBackground.mediaItem!);
-
+      _player.play();
       await _player.setUrl(media.id);
     } catch (e) {
       print("Error: $e");
