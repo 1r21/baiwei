@@ -1,18 +1,19 @@
 import 'dart:math';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 
 class SeekBar extends StatefulWidget {
   final Duration duration;
   final Duration position;
-  final Duration bufferedPosition;
+  // final Duration bufferedPosition;
   final ValueChanged<Duration>? onChanged;
   final ValueChanged<Duration>? onChangeEnd;
 
   SeekBar({
     required this.duration,
     required this.position,
-    required this.bufferedPosition,
+    // required this.bufferedPosition,
     this.onChanged,
     this.onChangeEnd,
   });
@@ -50,8 +51,7 @@ class _SeekBarState extends State<SeekBar> {
                 child: Slider(
                   min: 0.0,
                   max: widget.duration.inMilliseconds.toDouble(),
-                  value: min(widget.bufferedPosition.inMilliseconds.toDouble(),
-                      widget.duration.inMilliseconds.toDouble()),
+                  value: min(0.0, widget.duration.inMilliseconds.toDouble()),
                   onChanged: (value) {
                     setState(() {
                       _dragValue = value;
@@ -147,10 +147,10 @@ class HiddenThumbComponentShape extends SliderComponentShape {
   }) {}
 }
 
-class PositionData {
+class MediaState {
+  final MediaItem? mediaItem;
   final Duration position;
-  final Duration bufferedPosition;
-  final Duration duration;
+  final Duration? duration;
 
-  PositionData(this.position, this.bufferedPosition, this.duration);
+  MediaState(this.mediaItem, this.position, this.duration);
 }
