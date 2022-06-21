@@ -4,61 +4,67 @@ import 'package:baiwei/util/request.dart';
 
 import 'detail.dart';
 
-class Articles extends StatefulWidget {
+class Home extends StatefulWidget {
+  static const routeName = '/';
+
   @override
-  _ArticlesState createState() {
-    return _ArticlesState();
+  _Home createState() {
+    return _Home();
   }
 }
 
-class _ArticlesState extends State<Articles> {
-  late Future<List> futureArticle;
+class _Home extends State<Home> {
+  late Future<List> _futureArticles;
 
   @override
   void initState() {
     super.initState();
-    futureArticle = fetchArticle();
+    _futureArticles = fetchArticle();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List>(
-      future: futureArticle,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          return ListView.separated(
-            padding: const EdgeInsets.all(10),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (_, int index) {
-              var article = Article.fromJson(snapshot.data![index]);
-              return GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, DetailScreen.routeName,
-                      arguments: DetailArguments(
-                          article.id, article.date, article.title));
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+        ),
+        body: FutureBuilder<List>(
+          future: _futureArticles,
+          builder: (_, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(10),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, int index) {
+                  var article = Article.fromJson(snapshot.data![index]);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, Detail.routeName,
+                          arguments: DetailArguments(
+                              article.id, article.date, article.title));
+                    },
+                    child: articleOverview(article),
+                  );
                 },
-                child: articleOverview(article),
+                separatorBuilder: (_, int index) => const Divider(
+                  height: 30,
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
               );
-            },
-            separatorBuilder: (_, int index) => const Divider(
-              height: 30,
-              thickness: 1,
-              color: Colors.grey,
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        return Container(
-          child: Center(
-            child: SizedBox(
-              child: CircularProgressIndicator(),
-              height: 60.0,
-              width: 60.0,
-            ),
-          ),
-        );
-      },
-    );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+            return Container(
+              child: Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(),
+                  height: 60.0,
+                  width: 60.0,
+                ),
+              ),
+            );
+          },
+        ));
   }
 }

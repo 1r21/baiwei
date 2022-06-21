@@ -2,24 +2,29 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:baiwei/player/background_player.dart';
+import 'package:flutter/material.dart';
 
-import 'player/player.dart';
 import 'util/index.dart';
 import 'util/request.dart';
 
-class DetailScreen extends StatefulWidget {
+class Detail extends StatefulWidget {
   static const routeName = '/detail';
+  final AudioPlayerHandler _audioHandler;
+  Detail(this._audioHandler);
+
   @override
-  _DetailScreen createState() {
-    return _DetailScreen();
+  _Detail createState() {
+    return _Detail(_audioHandler);
   }
 }
 
-class _DetailScreen extends State<DetailScreen> {
-  late Future<Article> futureArticle;
+class _Detail extends State<Detail> {
+  late Future<Article> _futureArticle;
+  late AudioPlayerHandler _audioHandler;
+
+  _Detail(this._audioHandler);
 
   @override
   void initState() {
@@ -29,24 +34,36 @@ class _DetailScreen extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as DetailArguments;
-    futureArticle = fetchArticleById(args.id);
+    _futureArticle = fetchArticleById(args.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(args.date),
       ),
       body: Center(
         child: FutureBuilder<Article>(
-            future: futureArticle,
+            future: _futureArticle,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 var data = snapshot.data!;
                 var formatTexts = parseText(data.transcript).toList();
-                return Stack(
-                  children: [
-                    textList(formatTexts),
-                    playButton(data, context),
-                  ],
-                );
+                if (formatTexts.length > 0) {
+                  var _item = MediaItem(
+                      id: data.src,
+                      title: data.title,
+                      artUri: Uri.parse(data.cover),
+                      album: data.date,
+                      duration: Duration.zero);
+
+                  _audioHandler.init(_item);
+
+                  return Stack(
+                    children: [
+                      textList(formatTexts),
+                      playButton(data, context, _audioHandler),
+                    ],
+                  );
+                }
+                return Text("Not prepare yet.");
               }
 
               if (snapshot.hasError) {
@@ -85,7 +102,9 @@ class _DetailScreen extends State<DetailScreen> {
         },
       );
 
-  Positioned playButton(Article data, context) => Positioned(
+  Positioned playButton(
+          Article data, context, AudioPlayerHandler _audioHandler) =>
+      Positioned(
         bottom: 35,
         right: 35,
         child: Container(
@@ -104,15 +123,12 @@ class _DetailScreen extends State<DetailScreen> {
                   color: Colors.white,
                   size: 30.0,
                 ),
-                onTap: () {
-                  if (AudioService.currentMediaItem?.id != data.src) {
-                    AudioService.stop();
-                  }
+                onTap: () async {
                   Navigator.of(context).push(MaterialPageRoute(
                     fullscreenDialog: true,
                     builder: (BuildContext context) {
                       return Material(
-                        child: playView(data, context),
+                        child: playView(data, context, _audioHandler),
                       );
                     },
                   ));
@@ -133,8 +149,9 @@ class _DetailScreen extends State<DetailScreen> {
         ),
       );
 
-  Widget playView(Article data, BuildContext context) {
-    double pOffset = Platform.isAndroid ? 20 : 50;
+  Widget playView(
+      Article data, BuildContext context, AudioPlayerHandler _audioHandler) {
+    double pOffset = Platform.isAndroid || Platform.isMacOS ? 20 : 50;
     return Stack(
       children: [
         ImageFiltered(
@@ -149,7 +166,7 @@ class _DetailScreen extends State<DetailScreen> {
           ),
         ),
         Positioned(
-          top: Platform.isAndroid ? 30 : 50,
+          top: Platform.isAndroid || Platform.isMacOS ? 30 : 50,
           left: 0,
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -165,6 +182,10 @@ class _DetailScreen extends State<DetailScreen> {
                     onPressed: Navigator.of(context).pop,
                   ),
                 ),
+                Text(
+                  data.date,
+                  style: TextStyle(color: Colors.white),
+                ),
                 Container(
                     width: 200,
                     height: 200,
@@ -177,23 +198,10 @@ class _DetailScreen extends State<DetailScreen> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     )),
-                Text(
-                  data.title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFFFFFFFF),
-                  ),
-                ),
                 Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: pOffset),
-                    child: Text(
-                      data.date,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFFFFFFFF),
-                      ),
-                    )),
-                MyPlayer(data)
+                  padding: EdgeInsets.only(top: 10, bottom: pOffset),
+                ),
+                BackgroundPlayer(_audioHandler)
               ],
             ),
           ),

@@ -1,16 +1,28 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:baiwei/player/background_player.dart';
 import 'package:baiwei/home.dart';
 import 'detail.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
-  runApp(MyApp());
+  var _audioHandler = await AudioService.init(
+    builder: () => AudioPlayerHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
+      androidNotificationChannelName: 'Audio playback',
+      androidNotificationOngoing: true,
+    ),
+  );
+  runApp(MyApp(_audioHandler));
 }
 
 class MyApp extends StatelessWidget {
+  final AudioPlayerHandler _audioHandler;
+  MyApp(this._audioHandler);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -28,16 +40,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.orange,
       ),
-      initialRoute: '/',
+      initialRoute: Home.routeName,
       routes: {
-        '/': (context) => Scaffold(
-              appBar: AppBar(
-                title: Text('Home'),
-              ),
-              body: Articles(),
-            ),
-        DetailScreen.routeName: (context) =>
-            AudioServiceWidget(child: DetailScreen())
+        Home.routeName: (context) => Home(),
+        Detail.routeName: (context) => Detail(_audioHandler)
       },
     );
   }
