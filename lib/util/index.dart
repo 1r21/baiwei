@@ -4,7 +4,7 @@ Iterable<Map<String, String>> parseText(String article) {
   var content = article.replaceAll(RegExp(r'\r\n|\n|\r'), '');
   for (var key in entityMap.keys) {
     var val = entityMap[key] as String;
-    var re = RegExp("&" + key + ";");
+    var re = RegExp("&$key;");
     content = content.replaceAll(re, val);
   }
 

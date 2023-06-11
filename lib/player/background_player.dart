@@ -10,7 +10,7 @@ import 'common.dart';
 
 class BackgroundPlayer extends StatelessWidget {
   final AudioHandler _audioHandler;
-  BackgroundPlayer(this._audioHandler, {Key? key}) : super(key: key);
+  const BackgroundPlayer(this._audioHandler, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -110,14 +110,14 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   }
 
   /// Initialise our audio handler.
-  void init(MediaItem _item) {
+  void init(MediaItem item) {
     _player.stop();
     // Load the player.
-    _player.setAudioSource(AudioSource.uri(Uri.parse(_item.id)));
+    _player.setAudioSource(AudioSource.uri(Uri.parse(item.id)));
 
     // update duration
     _player.durationStream.listen((duration) {
-      final modifiedMediaItem = _item.copyWith(duration: duration);
+      final modifiedMediaItem = item.copyWith(duration: duration);
       mediaItem.add(modifiedMediaItem);
     });
     // }

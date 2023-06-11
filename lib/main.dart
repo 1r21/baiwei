@@ -8,7 +8,7 @@ import 'detail.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
-  var _audioHandler = await AudioService.init(
+  var audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandler(),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
@@ -16,12 +16,13 @@ void main() async {
       androidNotificationOngoing: true,
     ),
   );
-  runApp(MyApp(_audioHandler));
+  runApp(BaiweiApp(audioHandler));
 }
 
-class MyApp extends StatelessWidget {
+class BaiweiApp extends StatelessWidget {
   final AudioPlayerHandler _audioHandler;
-  MyApp(this._audioHandler);
+
+  const BaiweiApp(this._audioHandler, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: Home.routeName,
       routes: {
-        Home.routeName: (context) => Home(),
+        Home.routeName: (contet1) => const Home(),
         Detail.routeName: (context) => Detail(_audioHandler)
       },
     );

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,16 +11,14 @@ import 'common.dart';
 
 class JustPlayer extends StatefulWidget {
   final Article article;
-  JustPlayer(this.article);
+  const JustPlayer(this.article, {super.key});
 
   @override
-  JustPlayerState createState() => JustPlayerState(article);
+  JustPlayerState createState() => JustPlayerState();
 }
 
 class JustPlayerState extends State<JustPlayer> with WidgetsBindingObserver {
   final _player = AudioPlayer();
-  final Article article;
-  JustPlayerState(this.article);
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class JustPlayerState extends State<JustPlayer> with WidgetsBindingObserver {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
     ));
-    _init(article.src);
+    _init(widget.article.src);
   }
 
   Future<void> _init(String url) async {
@@ -38,14 +38,14 @@ class JustPlayerState extends State<JustPlayer> with WidgetsBindingObserver {
     // Listen to errors during playback.
     _player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace stackTrace) {
-      print('A stream error occurred: $e');
+      log('A stream error occurred: $e');
     });
     // Try to load audio from a source and catch any errors.
     try {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(AudioSource.uri(Uri.parse(url)));
     } catch (e) {
-      print("Error loading audio source: $e");
+      log("Error loading audio source: $e");
     }
   }
 

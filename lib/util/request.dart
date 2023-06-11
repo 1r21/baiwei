@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String baseURI = dotenv.env['API_URL']! + '/api';
+String baseURI = '${dotenv.env['API_URL']!}/api';
 
 class Api {
   final int code;

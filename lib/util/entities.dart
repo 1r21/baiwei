@@ -1,4 +1,4 @@
-final entityMap = const {
+const entityMap = {
   "lt": "",
   "gt": "",
   "amp": "&",

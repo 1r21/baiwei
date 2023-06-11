@@ -7,13 +7,13 @@ import 'detail.dart';
 class Home extends StatefulWidget {
   static const routeName = '/';
 
+  const Home({super.key});
+
   @override
-  _Home createState() {
-    return _Home();
-  }
+  State<Home> createState() => _HomeState();
 }
 
-class _Home extends State<Home> {
+class _HomeState extends State<Home> {
   late Future<List> _futureArticles;
 
   @override
@@ -26,7 +26,7 @@ class _Home extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
         ),
         body: FutureBuilder<List>(
           future: _futureArticles,
@@ -55,13 +55,11 @@ class _Home extends State<Home> {
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
-            return Container(
-              child: Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(),
-                  height: 60.0,
-                  width: 60.0,
-                ),
+            return const Center(
+              child: SizedBox(
+                height: 60.0,
+                width: 60.0,
+                child: CircularProgressIndicator(),
               ),
             );
           },

@@ -9,11 +9,11 @@ Widget articleOverview(Article article) {
         width: 400,
         height: 200,
         fit: BoxFit.cover,
-        placeholder: AssetImage("assets/102.jpeg"),
+        placeholder: const AssetImage("assets/102.jpeg"),
         image: NetworkImage(article.cover, scale: 1.0),
       ),
       Container(
-        margin: EdgeInsets.only(top: 10, bottom: 10),
+        margin: const EdgeInsets.only(top: 10, bottom: 10),
         child: Text(
           article.date,
           style: const TextStyle(fontSize: 14),
