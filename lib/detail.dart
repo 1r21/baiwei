@@ -20,29 +20,29 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  late Future<Article> _futureArticle;
+  late Future<Article> futureArticle;
 
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as DetailArguments;
-    _futureArticle = fetchArticleById(args.id);
+    futureArticle = fetchArticleById(args.id);
     return Scaffold(
       appBar: AppBar(
         title: Text(args.date),
       ),
       body: Center(
         child: FutureBuilder<Article>(
-            future: _futureArticle,
+            future: futureArticle,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var data = snapshot.data!;
-                var formatTexts = parseText(data.transcript).toList();
+                var article = snapshot.data!;
+                var formatTexts = parseText(article.transcript).toList();
                 if (formatTexts.isNotEmpty) {
                   var item = MediaItem(
-                      id: data.src,
-                      title: data.title,
-                      artUri: Uri.parse(data.cover),
-                      album: data.date,
+                      id: article.src,
+                      title: article.title,
+                      artUri: Uri.parse(article.cover),
+                      album: article.date,
                       duration: Duration.zero);
 
                   widget.audioPlayerHandler.init(item);
@@ -50,7 +50,7 @@ class _DetailState extends State<Detail> {
                   return Stack(
                     children: [
                       textList(formatTexts),
-                      playButton(data, context, widget.audioPlayerHandler),
+                      playButton(article, context, widget.audioPlayerHandler),
                     ],
                   );
                 }

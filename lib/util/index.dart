@@ -1,7 +1,7 @@
 import 'entities.dart';
 
-Iterable<Map<String, String>> parseText(String article) {
-  var content = article.replaceAll(RegExp(r'\r\n|\n|\r'), '');
+Iterable<Map<String, String>> parseText(String text) {
+  var content = text.replaceAll(RegExp(r'\r\n|\n|\r'), '');
   for (var key in entityMap.keys) {
     var val = entityMap[key] as String;
     var re = RegExp("&$key;");
@@ -25,8 +25,4 @@ Iterable<Map<String, String>> parseText(String article) {
           RegExp(r'<p[^>]*>(.*?)<\/p>'), (Match m) => m[1].toString()),
     };
   });
-}
-
-void main() {
-  parseText('asdf');
 }

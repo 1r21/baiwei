@@ -43,7 +43,7 @@ class BaiweiApp extends StatelessWidget {
       ),
       initialRoute: Home.routeName,
       routes: {
-        Home.routeName: (contet1) => const Home(),
+        Home.routeName: (context) => const Home(),
         Detail.routeName: (context) => Detail(_audioHandler)
       },
     );
