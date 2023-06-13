@@ -4,9 +4,11 @@ import 'dart:ui';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:baiwei/player/background_player.dart';
+import 'package:baiwei/service/article.dart';
 import 'package:flutter/material.dart';
 
-import 'util/index.dart';
+import 'model/article.dart';
+import 'util/util.dart';
 import 'util/request.dart';
 
 class Detail extends StatefulWidget {

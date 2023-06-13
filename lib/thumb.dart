@@ -1,5 +1,6 @@
-import 'package:baiwei/util/request.dart';
 import 'package:flutter/material.dart';
+
+import 'model/article.dart';
 
 Widget articleOverview(Article article) {
   return Column(

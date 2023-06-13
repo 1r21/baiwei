@@ -26,3 +26,16 @@ Iterable<Map<String, String>> parseText(String text) {
     };
   });
 }
+
+class Pager<T> {
+  final int total;
+  final int page;
+  final int pageSize;
+  final List<T> list;
+
+  Pager(this.list, this.total, this.page, this.pageSize);
+
+  Pager.fromJson(Map<String, dynamic> json)
+      : this(json["list"] as List<T>, json['total'], json['page'],
+            json['pageSize']);
+}

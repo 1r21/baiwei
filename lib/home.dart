@@ -1,8 +1,10 @@
+import 'package:baiwei/service/article.dart';
 import 'package:baiwei/thumb.dart';
+import 'package:baiwei/util/util.dart';
 import 'package:flutter/material.dart';
-import 'package:baiwei/util/request.dart';
 
 import 'detail.dart';
+import 'model/article.dart';
 
 class Home extends StatefulWidget {
   static const routeName = '/';

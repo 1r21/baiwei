@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../util/request.dart';
+import '../model/article.dart';
 import 'common.dart';
 
 class JustPlayer extends StatefulWidget {
