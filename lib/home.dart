@@ -16,7 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Future<Pager> futureArticles;
+  late Future<Pager<Article>> futureArticles;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           title: const Text('Home'),
         ),
-        body: FutureBuilder<Pager>(
+        body: FutureBuilder<Pager<Article>>(
           future: futureArticles,
           builder: (_, snapshot) {
             if (snapshot.hasData) {
@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.all(10),
                 itemCount: list.length,
                 itemBuilder: (_, int index) {
-                  var article = Article.fromJson(list[index]);
+                  var article = list[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, Detail.routeName,

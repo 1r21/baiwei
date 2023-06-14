@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 
 import 'model/article.dart';
 import 'util/util.dart';
-import 'util/request.dart';
 
 class Detail extends StatefulWidget {
   static const routeName = '/detail';

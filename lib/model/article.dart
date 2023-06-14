@@ -11,8 +11,8 @@ class Article {
       required this.cover,
       required this.date,
       required this.title,
-      this.transcript = '',
-      this.src = ''});
+      required this.transcript,
+      required this.src});
 
   Article.fromJson(Map<String, dynamic> json)
       : this(
@@ -20,8 +20,8 @@ class Article {
             cover: json['cover'],
             date: json['date'],
             title: json['title'],
-            src: json['src'] ?? "",
-            transcript: json['transcript'] ?? "");
+            src: json['src'] ?? '',
+            transcript: json['transcript'] ?? '');
 
   Map<String, dynamic> toMap() {
     return {

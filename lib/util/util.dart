@@ -35,7 +35,16 @@ class Pager<T> {
 
   Pager(this.list, this.total, this.page, this.pageSize);
 
-  Pager.fromJson(Map<String, dynamic> json)
-      : this(json["list"] as List<T>, json['total'], json['page'],
-            json['pageSize']);
+  factory Pager.fromJson(Map<String, dynamic> json) {
+    if (json
+        case {
+          'total': int total,
+          'page': int p,
+          'pageSize': int ps,
+          'list': List<T> list
+        }) {
+      return Pager(list, total, p, ps);
+    }
+    throw const FormatException('Unexpected JSON format for Pager.');
+  }
 }
