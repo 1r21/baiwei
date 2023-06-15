@@ -48,6 +48,8 @@ class BWClient extends http.BaseClient {
       }
     } catch (e) {
       throw Exception('send request failed.');
+    } finally {
+      _client.close();
     }
   }
 
