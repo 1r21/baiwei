@@ -1,7 +1,7 @@
 import 'entities.dart';
 
 Iterable<Map<String, String>> parseText(String text) {
-  var content = text.replaceAll(RegExp(r'\r\n|\n|\r'), '');
+  var content = text.replaceAll(RegExp(r'\r\n|\n|\r|\<p\/>'), '');
   for (var key in entityMap.keys) {
     var val = entityMap[key] as String;
     var re = RegExp("&$key;");
