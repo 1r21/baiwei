@@ -22,7 +22,7 @@ jobs:
         env:
           API_URL: ${{ secrets.API_URL }}
         run: |
-          echo "API_URL=$API_URL" > .env
+          echo "API_URL=$API_URL" > app.env
           flutter pub get
           flutter build web
 

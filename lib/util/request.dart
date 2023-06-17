@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 String baseURI = '${dotenv.env['API_URL']!}/api';
 
@@ -34,7 +33,7 @@ class BWClient extends http.BaseClient {
         request.body = jsonEncode(body);
       }
       var streamedResponse = await send(request);
-      var response = await Response.fromStream(streamedResponse);
+      var response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode == 200) {
         var map = jsonDecode(response.body);
         var Api(:code, :data, :message) = Api.fromJson(map);

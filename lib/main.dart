@@ -6,8 +6,8 @@ import 'package:baiwei/player/background_player.dart';
 import 'package:baiwei/home.dart';
 import 'detail.dart';
 
-void main() async {
-  await dotenv.load(fileName: '.env');
+void main(arguments) async {
+  await dotenv.load(fileName: 'app.env');
   var audioHandler = await AudioService.init(
     builder: () => AudioPlayerHandler(),
     config: const AudioServiceConfig(
